@@ -1,34 +1,48 @@
 package com.miage.jirachi.rakechu;
 
+import java.io.IOException;
+
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.PatternLayout;
 
 
-public class ServerController {	
+public class ServerController {
+    public final static int VERSION_MAJOR = 0;
+    public final static int VERSION_MINOR = 1;
+    public final static int VERSION_REVISION = 0;
+    
+    public static org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger("MAIN");
+    
 	/**
+	 * Main
 	 * @param args
+	 * @throws IOException 
 	 */
-	public static void main(String[] args) {
-		BitStream test1 = new BitStream();
-		test1.write((int)489450145);
-		test1.write((char)'a');
-		test1.write("Salut");
-		test1.write(15.405645f);
-		
-		Byte[] bytes = test1.getBytes();
-		
-		BitStream test2 = new BitStream(bytes);
-		int value1 = test2.readInt();
-		char value2 = test2.readChar();
-		String value3 = test2.readString();
-		float value4 = test2.readFloat();
-		
-		String serialized = "" + value1 + ";" + value2 + ";" + value3 + ";" + value4;
-		
-		System.out.println("Integer value: " + value1);
-		System.out.println("Char value: " + value2);
-		System.out.println("String value: " + value3);
-		System.out.println("Float value: " + value4);
-		System.out.println("Packet size: " + bytes.length + " bytes");
-		System.out.println("Packet size if we'd String everything using ';' as separator: " + serialized.getBytes().length + " bytes");
+	public static void main(String[] args) throws IOException {
+	    System.out.println("Firing up logger...");
+	    
+	    PatternLayout logLayout = new PatternLayout("%d{HH:mm:ss} %-5p - %F:%-4L - %m%n");
+	    LOG.addAppender(new ConsoleAppender(logLayout));
+	    LOG.addAppender(new FileAppender(logLayout, "main.log", false));
+	    LOG.setAdditivity(true);
+	    
+	    LOG.debug("Logger started!");
+		LOG.info("===============================");
+		LOG.info("  _____       _             _           ");
+		LOG.info(" |  __ \\     | |           | |          ");
+		LOG.info(" | |__) |__ _| | _____  ___| |__  _   _ ");
+		LOG.info(" |  _  // _` | |/ / _ \\/ __| '_ \\| | | |");
+		LOG.info(" | | \\ | (_| |   |  __| (__| | | | |_| |");
+		LOG.info(" |_|  \\_\\__,_|_|\\_\\___|\\___|_| |_|\\__,_|");
+		LOG.info("                                        ");
+		LOG.info("===============================");
+		LOG.info("");
+		LOG.info("Version " + VERSION_MAJOR + "." + VERSION_MINOR + "." + VERSION_REVISION);
+		LOG.info("Copyright (c) 2012-2013 Guillaume Lesniak, Elise Richard, Myriam Delaruelle");
+		LOG.info("");
+        
+		NetworkController.getInstance().startLoop();
 	}
 
 }

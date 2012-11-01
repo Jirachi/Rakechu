@@ -45,4 +45,12 @@ public class GameInstance {
 	public GameInstance(long id) {
 		mIdentifier = id;
 	}
+	
+	public long getIdentifier() {
+	    return mIdentifier;
+	}
+	
+	public GameState getCurrentState() {
+	    return mStatus;
+	}
 }
