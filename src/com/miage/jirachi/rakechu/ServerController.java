@@ -22,6 +22,7 @@ public class ServerController {
 	public static void main(String[] args) throws IOException {
 	    System.out.println("Firing up logger...");
 	    
+	    // On créé le log
 	    PatternLayout logLayout = new PatternLayout("%d{HH:mm:ss} %-5p - %F:%-4L - %m%n");
 	    LOG.addAppender(new ConsoleAppender(logLayout));
 	    LOG.addAppender(new FileAppender(logLayout, "main.log", false));
@@ -42,6 +43,7 @@ public class ServerController {
 		LOG.info("Copyright (c) 2012-2013 Guillaume Lesniak, Elise Richard, Myriam Delaruelle");
 		LOG.info("");
         
+		// On démarre la boucle réseau principale
 		NetworkController.getInstance().startLoop();
 	}
 

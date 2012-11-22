@@ -1,5 +1,8 @@
 package com.miage.jirachi.rakechu;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 /**
  * Represents an instance of a game level, with all the entities inside
  * 
@@ -37,6 +40,8 @@ public class GameInstance {
 	 */
 	private GameState mStatus;
 	
+	private ArrayList<Player> mPlayers;
+	
 	
 	/**
 	 * Default constructor
@@ -44,6 +49,7 @@ public class GameInstance {
 	 */
 	public GameInstance(long id) {
 		mIdentifier = id;
+		mPlayers = new ArrayList<Player>();
 	}
 	
 	public long getIdentifier() {
@@ -52,5 +58,19 @@ public class GameInstance {
 	
 	public GameState getCurrentState() {
 	    return mStatus;
+	}
+	
+	public void addPlayer(Player p) {
+	    mPlayers.add(p);
+	}
+	
+	public void sendPacket(BitStream data, Player avoid) throws IOException {
+	    for (int i = 0; i < mPlayers.size(); i++) {
+	        Player p = mPlayers.get(i);
+	        if (p == avoid)
+	            continue;
+	        
+	        p.getNetworkOutput().write(data.getBytesP());
+	    }
 	}
 }

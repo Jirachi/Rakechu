@@ -1,39 +1,6 @@
 package com.miage.jirachi.rakechu;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 public class GameInstanceManager {
 	private static GameInstanceManager mSingleton = null;
 	

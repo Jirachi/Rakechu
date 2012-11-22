@@ -18,6 +18,8 @@ public class NetworkController {
         @Override
         public void run() {
             ServerController.LOG.info("Started network loop in thread");
+            GameInstance testInstance = new GameInstance(0);
+            
             // Run the network loop as long as the thread is not interrupted
             while (!isInterrupted()) {
                 // Check if we have new incoming connections
@@ -40,6 +42,7 @@ public class NetworkController {
                         
                         // Try to read data from player inputstream
                         try {
+                            if (in == null) continue;
                             int bytesToRead = in.available();
                             
                             // The player has data for us!
@@ -49,7 +52,28 @@ public class NetworkController {
                                 
                                 ServerController.LOG.debug("Data received: " + new String(data));
                                 
-                                // TODO: Create a BitStream, read the opcode, do things
+                                // Create a BitStream, read the opcode, do things
+                                BitStream datastream = new BitStream(data);
+                                short opcode = datastream.readShort();
+                                
+                                // Process the packet
+                                switch (opcode) {
+                                case Opcodes.CMSG_BOOTME:
+                                    p.setGameInstance(testInstance);
+                                    break;
+                                    
+                                case Opcodes.CMSG_MOVE_LEFT:
+                                    PacketHandler.getInstance().handleMovePacket(p, Character.DIRECTION_LEFT);
+                                    break;
+                                    
+                                case Opcodes.CMSG_MOVE_RIGHT:
+                                    PacketHandler.getInstance().handleMovePacket(p, Character.DIRECTION_RIGHT);
+                                    break;
+                                    
+                                case Opcodes.CMSG_MOVE_STOP:
+                                    PacketHandler.getInstance().handleMovePacket(p, Character.DIRECTION_STOP);
+                                    break;
+                                }
                             }
                         } catch (IOException e) {
                             ServerController.LOG.error("IOException during player processing: " + e.getMessage());
