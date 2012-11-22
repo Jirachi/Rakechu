@@ -1,48 +1,34 @@
 package com.miage.jirachi.rakechu;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
+import com.esotericsoftware.kryonet.Connection;
 
 public class Player extends Character {
-    private Socket mNetworkSocket;
-    private InputStream mNetworkInput;
-    private OutputStream mNetworkOutput;
+    private Connection mNetworkConn;
 
-    public Player(Socket _socket) {
-        mNetworkSocket = _socket;
-        try {
-            mNetworkInput = _socket.getInputStream();
-            mNetworkOutput = _socket.getOutputStream();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public Socket getNetworkSocket() {
-        return mNetworkSocket;
-    }
-
-    public InputStream getNetworkInput() {
-        return mNetworkInput;
-    }
-
-    public OutputStream getNetworkOutput() {
-        return mNetworkOutput;
+    public Player(Connection _socket) {
+    	mNetworkConn = _socket;
+        
     }
 
     @Override
     public void setMoveDirection(short direction) {
         super.setMoveDirection(direction);
-        BitStream reply = PacketMaker.makeMovePacket(direction, mNetworkId);
         
-        try {
-            mGameInstance.sendPacket(reply, this);
-        } catch (IOException e) {
-            ServerController.LOG.error("Unable to transmit MOVE reply package!");
-            e.printStackTrace();
-        }
+        System.out.println("The player id " + mNetworkId + " moved");
+        
+        Packet reply = PacketMaker.makeMovePacket(direction, mNetworkId);
+        mGameInstance.sendPacket(reply, this);
+    }
+    
+    public void sendPacket(Packet packet) {
+    	if (packet == null) {
+    		ServerController.LOG.error("PACKET IS NULL!!!!!!");
+    		return;
+    	}
+    	if (packet.data == null) {
+    		ServerController.LOG.error("PACKET DATA IS NULL!!!!!!");
+    		return;
+    	}
+    	mNetworkConn.sendTCP(packet);
     }
 }

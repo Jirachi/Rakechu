@@ -1,6 +1,5 @@
 package com.miage.jirachi.rakechu;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -61,16 +60,31 @@ public class GameInstance {
 	}
 	
 	public void addPlayer(Player p) {
+	    p.setGameInstance(this);
+	    
+	    // Notify other players that this player joined the instance
+		sendPacket(PacketMaker.makePlayerConnect(p.getNetworkId()), p);
+	    
+	    // Notify the newborn of other players in the instance :3
+	    for (int i = 0; i < mPlayers.size(); i++) {
+	    	Player ex = mPlayers.get(i);
+	    	p.sendPacket(PacketMaker.makePlayerExisting(ex.getNetworkId(), ex.getPosition().x, ex.getPosition().y));
+	    }
+	    
 	    mPlayers.add(p);
 	}
 	
-	public void sendPacket(BitStream data, Player avoid) throws IOException {
+	public void removePlayer(Player p) {
+		mPlayers.remove(p);
+	}
+	
+	public void sendPacket(Packet data, Player avoid) {
 	    for (int i = 0; i < mPlayers.size(); i++) {
 	        Player p = mPlayers.get(i);
 	        if (p == avoid)
 	            continue;
 	        
-	        p.getNetworkOutput().write(data.getBytesP());
+	        p.sendPacket(data);
 	    }
 	}
 }

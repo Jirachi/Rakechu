@@ -15,6 +15,10 @@ public class PacketHandler {
     
     
     // == Methodes
+    public void handleBootMe(Player source) {
+    	source.sendPacket(PacketMaker.makeBootMe(source.getNetworkId()));
+    }
+    
     public void handleMovePacket(Player source, short direction) {
         source.setMoveDirection(direction);
     }

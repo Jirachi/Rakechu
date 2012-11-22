@@ -7,15 +7,17 @@ public class Character {
     public final static short DIRECTION_RIGHT = 2;
     
     // == Attributs
-    private static long mFreeNetworkId = 0;
+    private static long mFreeNetworkId = 1;
     
     protected short mMoveDirection = DIRECTION_STOP;
     protected long mNetworkId;
     protected GameInstance mGameInstance;
+    protected Vector2 mPosition;
     
     // == Constructeur
     public Character() {
         mNetworkId = mFreeNetworkId++;
+        mPosition = new Vector2();
     }
     
     // == Methodes
@@ -26,5 +28,13 @@ public class Character {
     
     public void setMoveDirection(short direction) {
         mMoveDirection = direction;
+    }
+    
+    public long getNetworkId() {
+    	return mNetworkId;
+    }
+    
+    public Vector2 getPosition() {
+    	return mPosition;
     }
 }
