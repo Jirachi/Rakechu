@@ -98,6 +98,14 @@ public class NetworkController {
         			case Opcodes.CMSG_MOVE_STOP:
         				PacketHandler.getInstance().handleMovePacket(p, Character.DIRECTION_STOP);
         				break;
+        				
+        			case Opcodes.CMSG_SYNC_POSITION:
+        			    PacketHandler.getInstance().handleSyncPosition(p, new BitStream(request.data));
+        			    break;
+        			    
+        			default:
+        			    ServerController.LOG.warn("Unhandled packet opcode: " + request.opcode);
+        			    break;
         			}
         		}
         	}

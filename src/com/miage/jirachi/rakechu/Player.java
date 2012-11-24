@@ -14,21 +14,49 @@ public class Player extends Character {
     public void setMoveDirection(short direction) {
         super.setMoveDirection(direction);
         
-        System.out.println("The player id " + mNetworkId + " moved");
-        
         Packet reply = PacketMaker.makeMovePacket(direction, mNetworkId);
         mGameInstance.sendPacket(reply, this);
     }
     
+    @Override
+    public void setPosition(float x, float y) {
+        super.setPosition(x, y);
+        
+        Packet reply = PacketMaker.makeSyncPositionPacket(mNetworkId, x,y);
+        mGameInstance.sendPacketUnreliable(reply, this);
+    }
+    
+    /**
+     * Envoie un packet de facon sure au joueur
+     * @param packet
+     */
     public void sendPacket(Packet packet) {
     	if (packet == null) {
-    		ServerController.LOG.error("PACKET IS NULL!!!!!!");
+    		ServerController.LOG.error("Packet is NULL !");
     		return;
     	}
     	if (packet.data == null) {
-    		ServerController.LOG.error("PACKET DATA IS NULL!!!!!!");
+    		ServerController.LOG.error("Packet data is NULL! Opcode is " + packet.opcode);
     		return;
     	}
+    	
     	mNetworkConn.sendTCP(packet);
+    }
+    
+    /**
+     * Envoie un packet rapidement, mais n'est pas sur d'arriver
+     * @param packet
+     */
+    public void sendPacketUnreliable(Packet packet) {
+        if (packet == null) {
+            ServerController.LOG.error("Packet is NULL !");
+            return;
+        }
+        if (packet.data == null) {
+            ServerController.LOG.error("Packet data is NULL! Opcode is " + packet.opcode);
+            return;
+        }
+        
+        mNetworkConn.sendUDP(packet);
     }
 }

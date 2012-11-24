@@ -22,4 +22,8 @@ public class PacketHandler {
     public void handleMovePacket(Player source, short direction) {
         source.setMoveDirection(direction);
     }
+    
+    public void handleSyncPosition(Player source, BitStream data) {
+        source.setPosition(data.readFloat(),data.readFloat());
+    }
 }

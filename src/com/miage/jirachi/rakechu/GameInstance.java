@@ -51,14 +51,26 @@ public class GameInstance {
 		mPlayers = new ArrayList<Player>();
 	}
 	
+	/**
+	 * @return L'identifiant Id de l'instance
+	 */
 	public long getIdentifier() {
 	    return mIdentifier;
 	}
 	
+	/**
+	 * 
+	 * @return L'etat de jeu de l'instance (voir GameState)
+	 */
 	public GameState getCurrentState() {
 	    return mStatus;
 	}
 	
+	/**
+	 * Ajoute un joueur a l'instance. Les autres joueurs seront notifies,
+	 * et l'instance du joueur sera definie a this.
+	 * @param p Le joueur a ajouter
+	 */
 	public void addPlayer(Player p) {
 	    p.setGameInstance(this);
 	    
@@ -74,10 +86,21 @@ public class GameInstance {
 	    mPlayers.add(p);
 	}
 	
+	/**
+	 * Supprime un joueur de l'instance
+	 * TODO: Signaler la deconnexion
+	 * @param p
+	 */
 	public void removePlayer(Player p) {
 		mPlayers.remove(p);
 	}
 	
+	/**
+	 * Envoie un paquet de facon sure a tous les joueurs de l'instance (excepte
+	 * 'avoid' si il est precise)
+	 * @param data Le packet a envoyer
+	 * @param avoid Le joueur auquel ne pas envoyer le paquet (peut etre null)
+	 */
 	public void sendPacket(Packet data, Player avoid) {
 	    for (int i = 0; i < mPlayers.size(); i++) {
 	        Player p = mPlayers.get(i);
@@ -86,5 +109,15 @@ public class GameInstance {
 	        
 	        p.sendPacket(data);
 	    }
+	}
+	
+	public void sendPacketUnreliable(Packet data, Player avoid) {
+	    for (int i = 0; i < mPlayers.size(); i++) {
+            Player p = mPlayers.get(i);
+            if (p == avoid)
+                continue;
+            
+            p.sendPacketUnreliable(data);
+        }
 	}
 }

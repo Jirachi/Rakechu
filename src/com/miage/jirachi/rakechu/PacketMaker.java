@@ -28,7 +28,7 @@ public class PacketMaker {
 	}
 	
 	// SMSG_PLAYER_EXISTING
-	public static Packet makePlayerExisting(long networkId, int posX, int posY) {
+	public static Packet makePlayerExisting(long networkId, float posX, float posY) {
 		Packet packet = new Packet();
 		packet.opcode = Opcodes.SMSG_PLAYER_EXISTING;
 		
@@ -67,4 +67,17 @@ public class PacketMaker {
         return packet;
     }
 
+    // SMSG_SYNC_POSITION
+    public static Packet makeSyncPositionPacket(long characterId, float x, float y) {
+        Packet packet = new Packet();
+        BitStream data = new BitStream();
+        
+        packet.opcode = Opcodes.SMSG_SYNC_POSITION;
+        data.write(characterId);
+        data.write(x);
+        data.write(y);
+        
+        packet.data = data.getBytesP();
+        return packet;
+    }
 }

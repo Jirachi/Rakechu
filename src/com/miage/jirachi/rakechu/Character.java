@@ -37,4 +37,9 @@ public class Character {
     public Vector2 getPosition() {
     	return mPosition;
     }
+    
+    public void setPosition(float x, float y) {
+        mPosition.x = x;
+        mPosition.y = y;
+    }
 }
