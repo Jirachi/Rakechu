@@ -13,6 +13,7 @@ public class Character {
     protected long mNetworkId;
     protected GameInstance mGameInstance;
     protected Vector2 mPosition;
+    protected int mHealth;
     
     // == Constructeur
     public Character() {
@@ -41,5 +42,15 @@ public class Character {
     public void setPosition(float x, float y) {
         mPosition.x = x;
         mPosition.y = y;
+    }
+
+    public void setHealth(int health) {
+    	mHealth = health;
+    	Packet reply = PacketMaker.makeSetHealthPacket(mNetworkId, mHealth);
+    	mGameInstance.sendPacket(reply, null);
+    }
+
+    public void jump() {
+
     }
 }

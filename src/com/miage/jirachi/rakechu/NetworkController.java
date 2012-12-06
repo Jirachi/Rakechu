@@ -103,6 +103,10 @@ public class NetworkController {
         			    PacketHandler.getInstance().handleSyncPosition(p, new BitStream(request.data));
         			    break;
         			    
+        			case Opcodes.CMSG_JUMP:
+        			    PacketHandler.getInstance().handleJump(p);
+        			    break;
+        			    
         			default:
         			    ServerController.LOG.warn("Unhandled packet opcode: " + request.opcode);
         			    break;

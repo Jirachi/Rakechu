@@ -26,6 +26,14 @@ public class Player extends Character {
         mGameInstance.sendPacketUnreliable(reply, this);
     }
     
+    @Override
+    public void jump() {
+        super.jump();
+        
+        Packet reply = PacketMaker.makeJumpPacket(mNetworkId);
+        mGameInstance.sendPacket(reply, this);
+    }
+    
     /**
      * Envoie un packet de facon sure au joueur
      * @param packet

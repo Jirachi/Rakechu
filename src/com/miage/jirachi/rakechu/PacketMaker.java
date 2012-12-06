@@ -66,6 +66,19 @@ public class PacketMaker {
         
         return packet;
     }
+    
+    // SMSG_SET_HEALTH
+    public static Packet makeSetHealthPacket(long networkId, int health){
+    	Packet packet = new Packet();
+    	packet.opcode = Opcodes.SMSG_SET_HEALTH;
+    	BitStream data = new BitStream();
+    	data.write(networkId);
+    	data.write(health);
+    	
+    	packet.data = data.getBytesP();
+    	
+    	return packet;
+    }
 
     // SMSG_SYNC_POSITION
     public static Packet makeSyncPositionPacket(long characterId, float x, float y) {
@@ -76,6 +89,18 @@ public class PacketMaker {
         data.write(characterId);
         data.write(x);
         data.write(y);
+        
+        packet.data = data.getBytesP();
+        return packet;
+    }
+    
+    // SMSG_JUMP
+    public static Packet makeJumpPacket(long characterId) {
+        Packet packet = new Packet();
+        BitStream data = new BitStream();
+        
+        packet.opcode = Opcodes.SMSG_JUMP;
+        data.write(characterId);
         
         packet.data = data.getBytesP();
         return packet;

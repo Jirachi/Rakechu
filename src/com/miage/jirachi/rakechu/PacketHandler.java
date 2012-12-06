@@ -26,4 +26,8 @@ public class PacketHandler {
     public void handleSyncPosition(Player source, BitStream data) {
         source.setPosition(data.readFloat(),data.readFloat());
     }
+    
+    public void handleJump(Player source) {
+        source.jump();
+    }
 }

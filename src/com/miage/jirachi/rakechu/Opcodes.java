@@ -36,4 +36,11 @@ public class Opcodes {
     // Synchro de position
     public final static short CMSG_SYNC_POSITION = 13;
     public final static short SMSG_SYNC_POSITION = 14;
+
+    public final static short SMSG_SET_HEALTH = 15;
+    
+    // Saut
+    public final static short CMSG_JUMP = 16;
+    public final static short SMSG_JUMP = 17;
 }
+
