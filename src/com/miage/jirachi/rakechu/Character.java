@@ -13,6 +13,7 @@ public class Character {
     protected long mNetworkId;
     protected GameInstance mGameInstance;
     protected Vector2 mPosition;
+    protected int mHealth;
     
     // == Constructeur
     public Character() {
@@ -37,4 +38,12 @@ public class Character {
     public Vector2 getPosition() {
     	return mPosition;
     }
+    
+    public void setHealth(int health){
+    	mHealth = health;
+    	Packet reply = PacketMaker.setHealthPacket(mNetworkId, mHealth);
+    	mGameInstance.sendPacket(reply, null);
+    }
+    
+    
 }

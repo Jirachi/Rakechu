@@ -15,4 +15,5 @@ public class Opcodes {
     public final static short SMSG_MOVE_STOP    = 10;
     public final static short CMSG_MOVE_JUMP    = 11;
     public final static short SMSG_MOVE_JUMP    = 12;
+    public final static short SMSG_SET_HEALTH = 15;
 }

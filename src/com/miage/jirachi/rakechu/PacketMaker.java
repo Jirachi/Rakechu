@@ -66,5 +66,17 @@ public class PacketMaker {
         
         return packet;
     }
+    
+    public static Packet setHealthPacket(long networkId, int health){
+    	Packet packet = new Packet();
+    	packet.opcode = Opcodes.SMSG_SET_HEALTH;
+    	BitStream data = new BitStream();
+    	data.write(networkId);
+    	data.write(health);
+    	
+    	packet.data = data.getBytesP();
+    	
+    	return packet;
+    }
 
 }
