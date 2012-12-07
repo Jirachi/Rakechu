@@ -13,25 +13,16 @@ public class Player extends Character {
     @Override
     public void setMoveDirection(short direction) {
         super.setMoveDirection(direction);
-        
-        Packet reply = PacketMaker.makeMovePacket(direction, mNetworkId);
-        mGameInstance.sendPacket(reply, this);
     }
     
     @Override
     public void setPosition(float x, float y) {
         super.setPosition(x, y);
-        
-        Packet reply = PacketMaker.makeSyncPositionPacket(mNetworkId, x,y);
-        mGameInstance.sendPacketUnreliable(reply, this);
     }
     
     @Override
     public void jump() {
         super.jump();
-        
-        Packet reply = PacketMaker.makeJumpPacket(mNetworkId);
-        mGameInstance.sendPacket(reply, this);
     }
     
     /**

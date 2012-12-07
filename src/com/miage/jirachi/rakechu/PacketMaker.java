@@ -105,4 +105,48 @@ public class PacketMaker {
         packet.data = data.getBytesP();
         return packet;
     }
+    
+    // SMSG_GAMEOBJECT_ANIMATE
+    public static Packet makeGameObjectAnimate(long objectId, String animationName) {
+        Packet packet = new Packet();
+        BitStream data = new BitStream();
+        
+        packet.opcode = Opcodes.SMSG_GAMEOBJECT_ANIMATE;
+        data.write(objectId);
+        data.write(animationName);
+        
+        packet.data = data.getBytesP();
+        return packet;
+    }
+    
+    // SMSG_GAMEOBJECT_MOVE
+    public static Packet makeGameObjectMove(long objectId, float targetX, float targetY, float time) {
+        Packet packet = new Packet();
+        BitStream data = new BitStream();
+        
+        packet.opcode = Opcodes.SMSG_GAMEOBJECT_MOVE;
+        data.write(objectId);
+        data.write(targetX);
+        data.write(targetY);
+        data.write(time);
+        
+        packet.data = data.getBytesP();
+        return packet;
+    }
+    
+    // SMSG_SPAWN_GAMEOBJECT
+    public static Packet makeSpawnGameObject(long objectId, float x, float y, String resource, int physicsType) {
+        Packet packet = new Packet();
+        BitStream data = new BitStream();
+        
+        packet.opcode = Opcodes.SMSG_SPAWN_GAMEOBJECT;
+        data.write(objectId);
+        data.write(x);
+        data.write(y);
+        data.write(resource);
+        data.write(physicsType);
+        
+        packet.data = data.getBytesP();
+        return packet;
+    }
 }

@@ -25,6 +25,7 @@ public class NetworkController {
     // There is a code behind this number. Will you find it?
     public final static int SERVER_PORT = 37153;
     private Map<Connection, Player> mPlayers = null;
+    private GameInstance mTestInstance = null;
 
     //=============================================
     // CONSTRUCTORS
@@ -50,8 +51,7 @@ public class NetworkController {
         
         mPlayers = new HashMap<Connection, Player>();
         
-        
-        final GameInstance testInstance = new GameInstance(1);
+        mTestInstance = new GameInstance(1);
         
         Server server = new Server() {
         	protected Connection newConnection() {
@@ -83,7 +83,7 @@ public class NetworkController {
         			switch (request.opcode)
         			{
         			case Opcodes.CMSG_BOOTME:
-        				testInstance.addPlayer(p);
+        				mTestInstance.addPlayer(p);
         				PacketHandler.getInstance().handleBootMe(p);
         				break;
         				
@@ -107,6 +107,10 @@ public class NetworkController {
         			    PacketHandler.getInstance().handleJump(p);
         			    break;
         			    
+        			case Opcodes.CMSG_USE_GAMEOBJECT:
+        			    PacketHandler.getInstance().handleUseGameObject(p);
+        			    break;
+        			    
         			default:
         			    ServerController.LOG.warn("Unhandled packet opcode: " + request.opcode);
         			    break;
@@ -123,14 +127,29 @@ public class NetworkController {
     // METHODS
     //=============================================
     /**
-     * DŽmarre le thread gŽrant la boucle rŽseau
+     * Demarre le thread gerant la boucle reseau
      */
     public void startLoop() {
-        while (true) { try { Thread.sleep(1000); } catch (Exception e) { } }
+        long lastFrameTime = System.currentTimeMillis();
+        
+        while (true) { 
+            try {
+                Thread.sleep(5);
+                
+                long msSinceLastFrame = System.currentTimeMillis() - lastFrameTime;
+                float timeDelta = msSinceLastFrame / 1000.0f;
+                
+                mTestInstance.update(timeDelta);
+                
+                lastFrameTime = System.currentTimeMillis();
+            } catch (Exception e) { 
+                ServerController.LOG.error(e.getMessage());
+            }
+        }
     }
     
     /**
-     * Arr�te le thread gŽrant la boucle rŽseau
+     * Arrete le thread gerant la boucle reseau
      */
     public void stopLoop() {
         

@@ -1,6 +1,8 @@
 package com.miage.jirachi.rakechu;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Represents an instance of a game level, with all the entities inside
@@ -40,6 +42,7 @@ public class GameInstance {
 	private GameState mStatus;
 	
 	private ArrayList<Player> mPlayers;
+	private ArrayList<GameObject> mObjects;
 	
 	
 	/**
@@ -96,12 +99,29 @@ public class GameInstance {
 	}
 	
 	/**
+	 * Ajoute un objet a l'instance. Les joueurs seront notifies,
+	 * et l'instance de l'objet sera definie a this.
+	 * @param go L'objet a ajouter
+	 */
+	public void addGameObject(GameObject go) {
+	    go.setGameInstance(this);
+	    
+	    // On signale aux joueurs la creation de cet objet
+	    sendPacket(PacketMaker.makeSpawnGameObject(go.getNetworkId(), 
+	            go.getPosition().x, go.getPosition().y, 
+	            go.getResourceName(), go.getPhysicsType()), null);
+	    
+	    mObjects.add(go);
+	}
+	
+	
+	/**
 	 * Envoie un paquet de facon sure a tous les joueurs de l'instance (excepte
 	 * 'avoid' si il est precise)
 	 * @param data Le packet a envoyer
 	 * @param avoid Le joueur auquel ne pas envoyer le paquet (peut etre null)
 	 */
-	public void sendPacket(Packet data, Player avoid) {
+	public void sendPacket(Packet data, Character avoid) {
 	    for (int i = 0; i < mPlayers.size(); i++) {
 	        Player p = mPlayers.get(i);
 	        if (p == avoid)
@@ -111,7 +131,13 @@ public class GameInstance {
 	    }
 	}
 	
-	public void sendPacketUnreliable(Packet data, Player avoid) {
+	/**
+	 * Envoie un paquet de facon incertaine a tous les joueurs de l'instance
+	 * (excepte 'avoid' s'il n'est pas null)
+	 * @param data Le packet a envoyer
+	 * @param avoid Le joueur auquel ne pas envoyer le paquet (peut etre null)
+	 */
+	public void sendPacketUnreliable(Packet data, Character avoid) {
 	    for (int i = 0; i < mPlayers.size(); i++) {
             Player p = mPlayers.get(i);
             if (p == avoid)
@@ -119,5 +145,38 @@ public class GameInstance {
             
             p.sendPacketUnreliable(data);
         }
+	}
+	
+	/**
+	 * Met a jour l'instance et les objets qu'elle contient
+	 * @param timeDelta
+	 */
+	public void update(float timeDelta) {
+	    // Mise ˆ jour des objets
+	    Iterator<GameObject> iter = mObjects.iterator();
+	    
+	    while (iter.hasNext()) {
+	        GameObject object = iter.next();
+	        object.update(timeDelta);
+	    }
+	}
+	
+	/**
+	 * Retourne la liste des objets a portee 
+	 */
+	List<GameObject> getObjectsNear(Player src, float dist) {
+	    List<GameObject> objectsList = new ArrayList<GameObject>();
+	    
+	    // On cherche parmis les objets
+	    Iterator<GameObject> iter = mObjects.iterator();
+        
+        while (iter.hasNext()) {
+            GameObject object = iter.next();
+            if (object.getPosition().squaredDistance(src.getPosition()) <= dist) {
+                objectsList.add(object);
+            }
+        }
+	    
+	    return objectsList;
 	}
 }
