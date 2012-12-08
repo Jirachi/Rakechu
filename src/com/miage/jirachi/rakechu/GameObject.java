@@ -10,6 +10,7 @@ public class GameObject {
     
     protected Vector2 mPosition;
     protected Vector2 mTargetPosition;
+    protected Vector2 mTargetDirection;
     protected String mResourceName;
     protected long mNetworkId;
     protected GameInstance mGameInstance;
@@ -67,6 +68,19 @@ public class GameObject {
     }
     
     /**
+     * Definit la position de l'objet
+     * @param pos Position
+     * @param notify Si il faut notifier le reseau ou pas
+     */
+    public void setPosition(Vector2 pos, boolean notify) {
+        mPosition = pos;
+        
+        if (notify) {
+            mGameInstance.sendPacket(PacketMaker.makeGameObjectForcePosition(mNetworkId, pos.x, pos.y), null);
+        }
+    }
+    
+    /**
      * Deplace l'objet a l'emplacement specifie en un temps donne
      * @param x
      * @param y
@@ -74,6 +88,13 @@ public class GameObject {
      */
     public void moveTo(float x, float y, float time) {
         mTargetPosition = new Vector2(x,y);
+        
+        // Le vecteur direction est normalise puis multiplie de sorte
+        // qu'on ait une vitesse par seconde qui correspond au temps total.
+        // (je me suis compris)
+        mTargetDirection = mTargetPosition.sub(mPosition).normalizedCopy();
+        mTargetDirection.mulSelf(1.0f/time);
+        
         mGameInstance.sendPacket(PacketMaker.makeGameObjectMove(mNetworkId, x, y, time), null);
     }
     
@@ -93,7 +114,7 @@ public class GameObject {
         if (mTargetPosition != null) {
             if (!mTargetPosition.equals(mPosition)) {
                 // On veut aller quelque part et on y est pas, on y va :3
-                // TODO
+                mPosition.addSelf(mTargetDirection.x * timeDelta, mTargetDirection.y * timeDelta);
             }
         }
     }

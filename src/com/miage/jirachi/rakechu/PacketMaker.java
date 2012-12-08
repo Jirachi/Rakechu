@@ -134,6 +134,20 @@ public class PacketMaker {
         return packet;
     }
     
+    // SMSG_GAMEOBJECT_FORCE_POSITION
+    public static Packet makeGameObjectForcePosition(long objectId, float x, float y) {
+        Packet packet = new Packet();
+        BitStream data = new BitStream();
+        
+        packet.opcode = Opcodes.SMSG_GAMEOBJECT_FORCE_POSITION;
+        data.write(objectId);
+        data.write(x);
+        data.write(y);
+        
+        packet.data = data.getBytesP();
+        return packet;
+    }
+    
     // SMSG_SPAWN_GAMEOBJECT
     public static Packet makeSpawnGameObject(long objectId, float x, float y, String resource, int physicsType) {
         Packet packet = new Packet();
