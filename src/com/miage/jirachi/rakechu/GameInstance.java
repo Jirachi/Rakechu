@@ -52,6 +52,7 @@ public class GameInstance {
 	public GameInstance(long id) {
 		mIdentifier = id;
 		mPlayers = new ArrayList<Player>();
+		mObjects = new ArrayList<GameObject>();
 	}
 	
 	/**

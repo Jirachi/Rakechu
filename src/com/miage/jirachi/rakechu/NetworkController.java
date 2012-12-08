@@ -63,7 +63,6 @@ public class NetworkController {
         	}
         };
        
-        
         server.start();
         server.bind(37153, 35173);
         
@@ -134,7 +133,7 @@ public class NetworkController {
         
         while (true) { 
             try {
-                Thread.sleep(5);
+                Thread.sleep(1);
                 
                 long msSinceLastFrame = System.currentTimeMillis() - lastFrameTime;
                 float timeDelta = msSinceLastFrame / 1000.0f;
@@ -142,8 +141,9 @@ public class NetworkController {
                 mTestInstance.update(timeDelta);
                 
                 lastFrameTime = System.currentTimeMillis();
-            } catch (Exception e) { 
-                ServerController.LOG.error(e.getMessage());
+            } catch (InterruptedException e) {
+                if (e.getMessage() != null)
+                    ServerController.LOG.error(e.getMessage());
             }
         }
     }
