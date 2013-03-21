@@ -80,6 +80,9 @@ public class Monster extends Character {
      * @param timeDelta Temps depuis le dernier update
      */
     public void update(float timeDelta) {
+        if (mHealth <= 0)
+            return;
+        
         if (mAttackCooldown > 0)
             mAttackCooldown -= timeDelta;
         
