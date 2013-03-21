@@ -53,6 +53,14 @@ public class GameInstance {
 		mIdentifier = id;
 		mCharacters = new ArrayList<Character>();
 		mObjects = new ArrayList<GameObject>();
+		
+		// ==============
+		// TEST =========
+		// ==============
+		// Add a dummy monster to test AI and server-side characters
+		Monster monsta = new Monster("buffallo");
+		addCharacter(monsta);
+		monsta.setPosition(1094.4509f, -60.645046f);
 	}
 	
 	/**
@@ -71,27 +79,32 @@ public class GameInstance {
 	}
 	
 	/**
+     * Ajoute un personnage a l'instance. Les joueurs seront notifies,
+     * et l'instance du personnage sera definie a this.
+     * @param p Le personnage a ajouter
+     */
+	public void addCharacter(Character p) {
+	    p.setGameInstance(this);
+
+	    // Notify other players that this player joined the instance
+	    sendPacket(PacketMaker.makePlayerConnect(p.getNetworkId(), p.getTexture()), p);
+
+	    // Notify the newborn of other players in the instance :3
+	    for (int i = 0; i < mCharacters.size(); i++) {
+	        Character cha = mCharacters.get(i);
+	        ((Player)p).sendPacket(PacketMaker.makePlayerExisting(cha.getNetworkId(), cha.getPosition().x, cha.getPosition().y, cha.getTexture()));
+	    }
+
+	    mCharacters.add(p);
+	}
+	
+	/**
 	 * Ajoute un joueur a l'instance. Les autres joueurs seront notifies,
 	 * et l'instance du joueur sera definie a this.
 	 * @param p Le joueur a ajouter
 	 */
 	public void addPlayer(Player p) {
-	    p.setGameInstance(this);
-	    
-	    // Notify other players that this player joined the instance
-		sendPacket(PacketMaker.makePlayerConnect(p.getNetworkId(), p.getTexture()), p);
-	    
-	    // Notify the newborn of other players in the instance :3
-	    for (int i = 0; i < mCharacters.size(); i++) {
-	        Character cha = mCharacters.get(i);
-	        
-	        if (cha instanceof Player) {
-	            Player ex = (Player)cha;
-	            p.sendPacket(PacketMaker.makePlayerExisting(ex.getNetworkId(), ex.getPosition().x, ex.getPosition().y, ex.getTexture()));
-	        }
-	    }
-	    
-	    mCharacters.add(p);
+	    addCharacter(p);
 	}
 	
 	/**
@@ -164,11 +177,22 @@ public class GameInstance {
 	 */
 	public void update(float timeDelta) {
 	    // Mise ˆ jour des objets
-	    Iterator<GameObject> iter = mObjects.iterator();
+	    Iterator<GameObject> iter_g = mObjects.iterator();
 	    
-	    while (iter.hasNext()) {
-	        GameObject object = iter.next();
+	    while (iter_g.hasNext()) {
+	        GameObject object = iter_g.next();
 	        object.update(timeDelta);
+	    }
+	    
+	    // Mise ˆ jour des monstres
+	    Iterator<Character> iter_m = mCharacters.iterator();
+	    
+	    while (iter_m.hasNext()) {
+	        Character c = iter_m.next();
+	        if (c instanceof Monster) {
+	            Monster m = (Monster)c;
+	            m.update(timeDelta);
+	        }
 	    }
 	}
 	
@@ -183,7 +207,7 @@ public class GameInstance {
 	    
 	    while (iter.hasNext()) {
 	        Character c = iter.next();
-	        //System.out.println("Distance: " + c.getPosition().squaredDistance(src.getPosition()) + " <= " + dist);
+	        System.out.println("Distance: " + c.getPosition().squaredDistance(src.getPosition()) + " <= " + dist);
 	        if (src != c && c.getPosition().squaredDistance(src.getPosition()) <= dist) {
                 charsList.add(c);
             }

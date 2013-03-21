@@ -129,7 +129,7 @@ public class Character {
      * Fait frapper les perso les plus proche
      */
     public void fight() {
-        List<Character> sightChars = mGameInstance.getCharactersNear(this, 25*25);
+        List<Character> sightChars = mGameInstance.getCharactersNear(this, 30*30);
         for (int i = 0; i < sightChars.size(); i++) {
             Character c = sightChars.get(i);
             
@@ -142,5 +142,13 @@ public class Character {
         
         Packet playAnimation = PacketMaker.makeFightPacket(mNetworkId);
         mGameInstance.sendPacket(playAnimation, this);
+    }
+    
+    
+    /**
+     * Retourne la vie
+     */
+    public int getHealth() {
+        return mHealth;
     }
 }
