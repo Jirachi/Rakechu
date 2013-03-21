@@ -53,7 +53,7 @@ public class NetworkController {
         
         mTestInstance = new GameInstance(1);
         
-        Server server = new Server() {
+        Server server = new Server(256, 256) {
         	protected Connection newConnection() {
         		Connection c = super.newConnection();
         		Player p = new Player(c);
