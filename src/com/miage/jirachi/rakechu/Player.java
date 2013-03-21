@@ -56,6 +56,6 @@ public class Player extends Character {
             return;
         }
         
-        mNetworkConn.sendTCP(packet);
+        mNetworkConn.sendUDP(packet);
     }
 }

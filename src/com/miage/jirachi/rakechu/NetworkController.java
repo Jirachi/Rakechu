@@ -77,7 +77,7 @@ public class NetworkController {
         		if (object instanceof Packet) {
         			Packet request = (Packet)object;
 
-        			ServerController.LOG.debug("Received opcode: " + request.opcode);
+        			//ServerController.LOG.debug("Received opcode: " + request.opcode);
         			
         			switch (request.opcode)
         			{
