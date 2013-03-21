@@ -1,5 +1,7 @@
 package com.miage.jirachi.rakechu;
 
+import java.util.List;
+
 public class Character {
     // == Constantes
     public final static short DIRECTION_STOP = 0;
@@ -10,6 +12,7 @@ public class Character {
     private static long mFreeNetworkId = 1;
     
     protected short mMoveDirection = DIRECTION_STOP;
+    protected short mIdleDirection = DIRECTION_RIGHT;
     protected long mNetworkId;
     protected GameInstance mGameInstance;
     protected Vector2 mPosition;
@@ -21,6 +24,7 @@ public class Character {
         mNetworkId = mFreeNetworkId++;
         mPosition = new Vector2();
         mTexture = texture;
+        mHealth = 100;
     }
     
     // == Methodes
@@ -46,6 +50,9 @@ public class Character {
      */
     public void setMoveDirection(short direction) {
         mMoveDirection = direction;
+        
+        if (direction != DIRECTION_STOP)
+            mIdleDirection = direction;
         
         Packet reply = PacketMaker.makeMovePacket(direction, mNetworkId);
         mGameInstance.sendPacket(reply, this);
@@ -102,5 +109,38 @@ public class Character {
      */
     public String getTexture() {
         return mTexture;
+    }
+    
+    /**
+     * Recoit un coup du personnage spŽcifiŽ et retire le montant de degats
+     */
+    public void hit(Character src, int amount) {
+        if (amount > mHealth) {
+            setHealth(0);
+        } else {
+            setHealth(mHealth - amount);
+        }
+        
+        Packet notify = PacketMaker.makeHitPacket(mNetworkId, amount);
+        mGameInstance.sendPacket(notify, null);
+    }
+    
+    /**
+     * Fait frapper les perso les plus proche
+     */
+    public void fight() {
+        List<Character> sightChars = mGameInstance.getCharactersNear(this, 25*25);
+        for (int i = 0; i < sightChars.size(); i++) {
+            Character c = sightChars.get(i);
+            
+            // filter direction
+            if ((mIdleDirection == DIRECTION_RIGHT && c.getPosition().x > this.getPosition().x)
+                    || (mIdleDirection == DIRECTION_LEFT && c.getPosition().x < this.getPosition().x)) {
+                c.hit(this, 10);
+            }           
+        }
+        
+        Packet playAnimation = PacketMaker.makeFightPacket(mNetworkId);
+        mGameInstance.sendPacket(playAnimation, this);
     }
 }

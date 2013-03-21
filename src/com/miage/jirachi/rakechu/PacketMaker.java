@@ -110,7 +110,7 @@ public class PacketMaker {
     }
     
     // SMSG_GAMEOBJECT_ANIMATE
-    public static Packet makeGameObjectAnimate(long objectId, String animationName) {
+    public static Packet makeGameObjectAnimatePacket(long objectId, String animationName) {
         Packet packet = new Packet();
         BitStream data = new BitStream();
         
@@ -123,7 +123,7 @@ public class PacketMaker {
     }
     
     // SMSG_GAMEOBJECT_MOVE
-    public static Packet makeGameObjectMove(long objectId, float targetX, float targetY, float time) {
+    public static Packet makeGameObjectMovePacket(long objectId, float targetX, float targetY, float time) {
         Packet packet = new Packet();
         BitStream data = new BitStream();
         
@@ -138,7 +138,7 @@ public class PacketMaker {
     }
     
     // SMSG_GAMEOBJECT_FORCE_POSITION
-    public static Packet makeGameObjectForcePosition(long objectId, float x, float y) {
+    public static Packet makeGameObjectForcePositionPacket(long objectId, float x, float y) {
         Packet packet = new Packet();
         BitStream data = new BitStream();
         
@@ -152,7 +152,7 @@ public class PacketMaker {
     }
     
     // SMSG_SPAWN_GAMEOBJECT
-    public static Packet makeSpawnGameObject(long objectId, float x, float y, String resource, int physicsType) {
+    public static Packet makeSpawnGameObjectPacket(long objectId, float x, float y, String resource, int physicsType) {
         Packet packet = new Packet();
         BitStream data = new BitStream();
         
@@ -162,6 +162,31 @@ public class PacketMaker {
         data.write(y);
         data.write(resource);
         data.write(physicsType);
+        
+        packet.data = data.getBytesP();
+        return packet;
+    }
+    
+    // SMSG_HIT
+    public static Packet makeHitPacket(long networkId, int amount) {
+        Packet packet = new Packet();
+        BitStream data = new BitStream();
+        
+        packet.opcode = Opcodes.SMSG_HIT;
+        data.write(networkId);
+        data.write(amount);
+        
+        packet.data = data.getBytesP();
+        return packet;
+    }
+    
+    // SMSG_FIGHT
+    public static Packet makeFightPacket(long networkId) {
+        Packet packet = new Packet();
+        BitStream data = new BitStream();
+        
+        packet.opcode = Opcodes.SMSG_FIGHT;
+        data.write(networkId);
         
         packet.data = data.getBytesP();
         return packet;

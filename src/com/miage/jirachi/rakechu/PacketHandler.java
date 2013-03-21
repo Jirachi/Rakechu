@@ -43,4 +43,8 @@ public class PacketHandler {
             objects.get(0).use(source);
         }
     }
+    
+    public void handleFight(Player source) {
+        source.fight();
+    }
 }

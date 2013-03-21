@@ -51,5 +51,10 @@ public class Opcodes {
     
     public final static short CMSG_USE_GAMEOBJECT = 22;
     public final static short SMSG_GAMEOBJECT_CHANGE_PHYSICS = 23;
+    
+    // Combat
+    public final static short CMSG_FIGHT = 24;
+    public final static short SMSG_FIGHT = 25;
+    public final static short SMSG_HIT = 26;
 }
 

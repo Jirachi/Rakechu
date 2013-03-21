@@ -119,6 +119,10 @@ public class NetworkController {
         			    PacketHandler.getInstance().handleUseGameObject(p);
         			    break;
         			    
+        			case Opcodes.CMSG_FIGHT:
+        			    PacketHandler.getInstance().handleFight(p);
+        			    break;
+        			    
         			default:
         			    ServerController.LOG.warn("Unhandled packet opcode: " + request.opcode);
         			    break;

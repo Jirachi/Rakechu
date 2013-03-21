@@ -41,7 +41,7 @@ public class GameInstance {
 	 */
 	private GameState mStatus;
 	
-	private ArrayList<Player> mPlayers;
+	private ArrayList<Character> mCharacters;
 	private ArrayList<GameObject> mObjects;
 	
 	
@@ -51,7 +51,7 @@ public class GameInstance {
 	 */
 	public GameInstance(long id) {
 		mIdentifier = id;
-		mPlayers = new ArrayList<Player>();
+		mCharacters = new ArrayList<Character>();
 		mObjects = new ArrayList<GameObject>();
 	}
 	
@@ -82,12 +82,16 @@ public class GameInstance {
 		sendPacket(PacketMaker.makePlayerConnect(p.getNetworkId(), p.getTexture()), p);
 	    
 	    // Notify the newborn of other players in the instance :3
-	    for (int i = 0; i < mPlayers.size(); i++) {
-	    	Player ex = mPlayers.get(i);
-	    	p.sendPacket(PacketMaker.makePlayerExisting(ex.getNetworkId(), ex.getPosition().x, ex.getPosition().y, ex.getTexture()));
+	    for (int i = 0; i < mCharacters.size(); i++) {
+	        Character cha = mCharacters.get(i);
+	        
+	        if (cha instanceof Player) {
+	            Player ex = (Player)cha;
+	            p.sendPacket(PacketMaker.makePlayerExisting(ex.getNetworkId(), ex.getPosition().x, ex.getPosition().y, ex.getTexture()));
+	        }
 	    }
 	    
-	    mPlayers.add(p);
+	    mCharacters.add(p);
 	}
 	
 	/**
@@ -96,7 +100,7 @@ public class GameInstance {
 	 * @param p
 	 */
 	public void removePlayer(Player p) {
-		mPlayers.remove(p);
+	    mCharacters.remove(p);
 	}
 	
 	/**
@@ -108,7 +112,7 @@ public class GameInstance {
 	    go.setGameInstance(this);
 	    
 	    // On signale aux joueurs la creation de cet objet
-	    sendPacket(PacketMaker.makeSpawnGameObject(go.getNetworkId(), 
+	    sendPacket(PacketMaker.makeSpawnGameObjectPacket(go.getNetworkId(), 
 	            go.getPosition().x, go.getPosition().y, 
 	            go.getResourceName(), go.getPhysicsType()), null);
 	    
@@ -123,12 +127,15 @@ public class GameInstance {
 	 * @param avoid Le joueur auquel ne pas envoyer le paquet (peut etre null)
 	 */
 	public void sendPacket(Packet data, Character avoid) {
-	    for (int i = 0; i < mPlayers.size(); i++) {
-	        Player p = mPlayers.get(i);
-	        if (p == avoid)
-	            continue;
+	    for (int i = 0; i < mCharacters.size(); i++) {
+	        Character c = mCharacters.get(i);
+	        if (c == avoid)
+                continue;
 	        
-	        p.sendPacket(data);
+	        if (c instanceof Player) {
+	            Player p = (Player)c;
+	            p.sendPacket(data);
+	        }
 	    }
 	}
 	
@@ -139,12 +146,15 @@ public class GameInstance {
 	 * @param avoid Le joueur auquel ne pas envoyer le paquet (peut etre null)
 	 */
 	public void sendPacketUnreliable(Packet data, Character avoid) {
-	    for (int i = 0; i < mPlayers.size(); i++) {
-            Player p = mPlayers.get(i);
-            if (p == avoid)
+	    for (int i = 0; i < mCharacters.size(); i++) {
+	        Character c = mCharacters.get(i);
+            if (c == avoid)
                 continue;
             
-            p.sendPacketUnreliable(data);
+            if (c instanceof Player) {
+                Player p = (Player)c;
+                p.sendPacketUnreliable(data);
+            }
         }
 	}
 	
@@ -163,9 +173,30 @@ public class GameInstance {
 	}
 	
 	/**
-	 * Retourne la liste des objets a portee 
+	 * Retourne la liste des personnages a portee
+	 * @note distance au carre
 	 */
-	List<GameObject> getObjectsNear(Player src, float dist) {
+	List<Character> getCharactersNear(Character src, float dist) {
+	    List<Character> charsList = new ArrayList<Character>();
+	    
+	    Iterator<Character> iter = mCharacters.iterator();
+	    
+	    while (iter.hasNext()) {
+	        Character c = iter.next();
+	        //System.out.println("Distance: " + c.getPosition().squaredDistance(src.getPosition()) + " <= " + dist);
+	        if (src != c && c.getPosition().squaredDistance(src.getPosition()) <= dist) {
+                charsList.add(c);
+            }
+	    }
+	    
+	    return charsList;
+	}
+	
+	/**
+	 * Retourne la liste des objets a portee 
+	 * @note distance au carre
+	 */
+	List<GameObject> getObjectsNear(Character src, float dist) {
 	    List<GameObject> objectsList = new ArrayList<GameObject>();
 	    
 	    // On cherche parmis les objets

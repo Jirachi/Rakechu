@@ -76,7 +76,7 @@ public class GameObject {
         mPosition = pos;
         
         if (notify) {
-            mGameInstance.sendPacket(PacketMaker.makeGameObjectForcePosition(mNetworkId, pos.x, pos.y), null);
+            mGameInstance.sendPacket(PacketMaker.makeGameObjectForcePositionPacket(mNetworkId, pos.x, pos.y), null);
         }
     }
     
@@ -95,7 +95,7 @@ public class GameObject {
         mTargetDirection = mTargetPosition.sub(mPosition).normalizedCopy();
         mTargetDirection.mulSelf(1.0f/time);
         
-        mGameInstance.sendPacket(PacketMaker.makeGameObjectMove(mNetworkId, x, y, time), null);
+        mGameInstance.sendPacket(PacketMaker.makeGameObjectMovePacket(mNetworkId, x, y, time), null);
     }
     
     /**
@@ -103,7 +103,7 @@ public class GameObject {
      * @param animation Nom de l'animation presente sur le client
      */
     public void playAnimation(String animation) {
-        mGameInstance.sendPacket(PacketMaker.makeGameObjectAnimate(mNetworkId, animation), null);
+        mGameInstance.sendPacket(PacketMaker.makeGameObjectAnimatePacket(mNetworkId, animation), null);
     }
     
     /**
