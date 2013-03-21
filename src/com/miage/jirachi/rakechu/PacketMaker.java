@@ -2,12 +2,13 @@ package com.miage.jirachi.rakechu;
 
 public class PacketMaker {
 	// SMSG_BOOTME
-	public static Packet makeBootMe(long networkId) {
+	public static Packet makeBootMe(long networkId, String skin) {
 		Packet packet = new Packet();
 		packet.opcode = Opcodes.SMSG_BOOTME;
 		
 		BitStream data = new BitStream();
 		data.write(networkId);
+		data.write(skin);
 		
 		packet.data = data.getBytesP();
 		

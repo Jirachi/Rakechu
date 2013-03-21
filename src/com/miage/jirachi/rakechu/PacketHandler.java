@@ -18,7 +18,7 @@ public class PacketHandler {
     
     // == Methodes
     public void handleBootMe(Player source) {
-    	source.sendPacket(PacketMaker.makeBootMe(source.getNetworkId()));
+    	source.sendPacket(PacketMaker.makeBootMe(source.getNetworkId(), source.getTexture()));
     }
     
     public void handleMovePacket(Player source, short direction) {
