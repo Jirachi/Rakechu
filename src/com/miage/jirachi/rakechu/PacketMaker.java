@@ -29,7 +29,7 @@ public class PacketMaker {
 	}
 	
 	// SMSG_PLAYER_EXISTING
-	public static Packet makePlayerExisting(long networkId, float posX, float posY) {
+	public static Packet makePlayerExisting(long networkId, float posX, float posY, String skin) {
 		Packet packet = new Packet();
 		packet.opcode = Opcodes.SMSG_PLAYER_EXISTING;
 		
@@ -37,6 +37,7 @@ public class PacketMaker {
 		data.write(networkId);
 		data.write(posX);
 		data.write(posY);
+		data.write(skin);
 		
 		packet.data = data.getBytesP();
 		

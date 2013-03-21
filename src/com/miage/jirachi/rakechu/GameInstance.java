@@ -84,7 +84,7 @@ public class GameInstance {
 	    // Notify the newborn of other players in the instance :3
 	    for (int i = 0; i < mPlayers.size(); i++) {
 	    	Player ex = mPlayers.get(i);
-	    	p.sendPacket(PacketMaker.makePlayerExisting(ex.getNetworkId(), ex.getPosition().x, ex.getPosition().y));
+	    	p.sendPacket(PacketMaker.makePlayerExisting(ex.getNetworkId(), ex.getPosition().x, ex.getPosition().y, ex.getTexture()));
 	    }
 	    
 	    mPlayers.add(p);
