@@ -14,11 +14,13 @@ public class Character {
     protected GameInstance mGameInstance;
     protected Vector2 mPosition;
     protected int mHealth;
+    protected String mTexture;
     
     // == Constructeur
-    public Character() {
+    public Character(String texture) {
         mNetworkId = mFreeNetworkId++;
         mPosition = new Vector2();
+        mTexture = texture;
     }
     
     // == Methodes
@@ -93,5 +95,12 @@ public class Character {
     public void jump() {
         Packet reply = PacketMaker.makeJumpPacket(mNetworkId);
         mGameInstance.sendPacket(reply, this);
+    }
+    
+    /**
+     * Retourne la texture utilisée par le personnage
+     */
+    public String getTexture() {
+        return mTexture;
     }
 }

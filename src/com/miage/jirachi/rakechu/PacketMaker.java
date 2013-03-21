@@ -15,12 +15,13 @@ public class PacketMaker {
 	}
 	
 	// SMSG_PLAYER_CONNECT
-	public static Packet makePlayerConnect(long networkId) {
+	public static Packet makePlayerConnect(long networkId, String skin) {
 		Packet packet = new Packet();	
 		packet.opcode = Opcodes.SMSG_PLAYER_CONNECT;
 		
 		BitStream data = new BitStream();
 		data.write(networkId);
+		data.write(skin);
 		
 		packet.data = data.getBytesP();
 		

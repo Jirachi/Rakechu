@@ -5,7 +5,8 @@ import com.esotericsoftware.kryonet.Connection;
 public class Player extends Character {
     private Connection mNetworkConn;
 
-    public Player(Connection _socket) {
+    public Player(Connection _socket, String _texture) {
+        super(_texture);
     	mNetworkConn = _socket;
         
     }
@@ -59,3 +60,4 @@ public class Player extends Character {
         mNetworkConn.sendUDP(packet);
     }
 }
+

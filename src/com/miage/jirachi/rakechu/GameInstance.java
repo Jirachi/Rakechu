@@ -79,7 +79,7 @@ public class GameInstance {
 	    p.setGameInstance(this);
 	    
 	    // Notify other players that this player joined the instance
-		sendPacket(PacketMaker.makePlayerConnect(p.getNetworkId()), p);
+		sendPacket(PacketMaker.makePlayerConnect(p.getNetworkId(), p.getTexture()), p);
 	    
 	    // Notify the newborn of other players in the instance :3
 	    for (int i = 0; i < mPlayers.size(); i++) {

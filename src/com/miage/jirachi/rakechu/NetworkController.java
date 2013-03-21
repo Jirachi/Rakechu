@@ -1,6 +1,8 @@
 package com.miage.jirachi.rakechu;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,7 +58,14 @@ public class NetworkController {
         Server server = new Server(256, 256) {
         	protected Connection newConnection() {
         		Connection c = super.newConnection();
-        		Player p = new Player(c);
+        		
+        		// decide of a skin to use :)
+        		String[] skins = {"fox", "droid_from_android", "gnu_from_gnu", "pacman_from_philippines",
+        		        "kisi_from_konsolscript", "tux_from_linux"};
+        		
+        		Collections.shuffle(Arrays.asList(skins));
+        		
+        		Player p = new Player(c, skins[0]);
         		
         		mPlayers.put(c, p);
         		return c;
