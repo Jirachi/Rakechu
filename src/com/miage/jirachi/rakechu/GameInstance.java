@@ -61,6 +61,7 @@ public class GameInstance {
 		Monster monsta = new Monster("buffallo");
 		addCharacter(monsta);
 		monsta.setPosition(1094.4509f, -60.645046f);
+		monsta.setMovementBoundaries(930, 1120);
 	}
 	
 	/**
