@@ -155,21 +155,25 @@ public class Monster extends Character {
             // Otherwise, make sure we don't go off-limits and chase the guy
             else if (mChasedCharacter.getPosition().x <= mAIBoundaryRight 
                     && mChasedCharacter.getPosition().x >= mAIBoundaryLeft) {
-                if (mChasedCharacter.getPosition().x < mPosition.x) {
-                    if (mMoveDirection != DIRECTION_LEFT) {
-                        mMoveDirection = DIRECTION_LEFT;
-                        
-                        // notify the network
-                        Packet p = PacketMaker.makeMovePacket(DIRECTION_LEFT, mNetworkId);
-                        mGameInstance.sendPacket(p, null);
-                    }
-                } else {
-                    if (mMoveDirection != DIRECTION_RIGHT) {
-                        mMoveDirection = DIRECTION_RIGHT;
-                        
-                        // notify the network
-                        Packet p = PacketMaker.makeMovePacket(DIRECTION_RIGHT, mNetworkId);
-                        mGameInstance.sendPacket(p, null);
+                if (mChasedCharacter.getPosition().squaredDistance(mPosition) > 20) {
+                    if (mChasedCharacter.getPosition().x < mPosition.x) {
+                        if (mMoveDirection != DIRECTION_LEFT) {
+                            mMoveDirection = DIRECTION_LEFT;
+                            
+                            // notify the network
+                            Packet p = PacketMaker.makeMovePacket(DIRECTION_LEFT, mNetworkId);
+                            mGameInstance.sendPacket(p, null);
+                            ServerController.LOG.info("Direction left!");
+                        }
+                    } else if (mChasedCharacter.getPosition().x > mPosition.x) {
+                        if (mMoveDirection != DIRECTION_RIGHT) {
+                            mMoveDirection = DIRECTION_RIGHT;
+                            
+                            // notify the network
+                            Packet p = PacketMaker.makeMovePacket(DIRECTION_RIGHT, mNetworkId);
+                            mGameInstance.sendPacket(p, null);
+                            ServerController.LOG.info("Direction right!");
+                        }
                     }
                 }
             } else {

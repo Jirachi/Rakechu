@@ -58,7 +58,7 @@ public class GameInstance {
 		// TEST =========
 		// ==============
 		// Add a dummy monster to test AI and server-side characters
-		Monster monsta = new Monster("buffallo");
+		Monster monsta = new Monster("VonFlamby");
 		addCharacter(monsta);
 		monsta.setPosition(1094.4509f, -60.645046f);
 		monsta.setMovementBoundaries(930, 1120);
